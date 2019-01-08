@@ -1,0 +1,10 @@
+#!/bin/sh
+
+mkdir -p rpmbuild/{RPMS,SRPMS,BUILD,BUILDROOT,SPECS,SOURCES}
+cp amzn2/*.patch rpmbuild/SOURCES/
+cp amzn2/*.spec rpmbuild/SPECS/
+
+pushd rpmbuild
+rpmbuild --undefine=_disable_source_fetch  --define '_topdir '`pwd` -ba SPECS/bcache-tools.spec
+popd
+

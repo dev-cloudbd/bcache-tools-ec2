@@ -6,9 +6,6 @@ License: GPLv2
 Group: System Environment/Base
 URL: http://bcache.evilpiepirate.org/
 VCS: https://github.com/g2p/bcache-tools.git
-# git clone https://github.com/g2p/bcache-tools.git
-# cd bcache-tools/
-# git archive --format=tar --prefix=bcache-tools-1.0.8/ v1.0.8 | gzip > ../bcache-tools-1.0.8.tar.gz
 Source0: https://github.com/g2p/bcache-tools/archive/v1.0.8.tar.gz
 # the following fix is pending upstream
 # gcc 5.1.1 apparently is more picky than Fedora 21 gcc

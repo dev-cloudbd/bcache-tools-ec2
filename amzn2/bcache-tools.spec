@@ -1,16 +1,11 @@
-#global gitdate 20131018
-
 Summary: Tools for Linux kernel block layer cache
 Name: bcache-tools
 Version: 1.0.8
-Release: 10%{?dist}
+Release: 11%{?dist}
 License: GPLv2
 Group: System Environment/Base
 URL: http://bcache.evilpiepirate.org/
 VCS: https://github.com/g2p/bcache-tools.git
-# git clone https://github.com/g2p/bcache-tools.git
-# cd bcache-tools/
-# git archive --format=tar --prefix=bcache-tools-1.0.8/ v1.0.8 | gzip > ../bcache-tools-1.0.8.tar.gz
 Source0: https://github.com/g2p/bcache-tools/archive/v1.0.8.tar.gz
 # the following fix is pending upstream
 # gcc 5.1.1 apparently is more picky than Fedora 21 gcc
@@ -18,7 +13,7 @@ Patch0: bcache-tools-1.0.8-crc64.patch
 # udev doesn't always recognize kmod as a builtin, use modprobe instead
 Patch1: bcache-tools-1.0.8-modprobe.patch
 Conflicts: dracut < 034
-BuildRequires: libuuid-devel libblkid-devel systemd
+BuildRequires: libuuid-devel libblkid-devel
 
 %description
 Bcache is a Linux kernel block layer cache. It allows one or more fast disk
@@ -41,13 +36,13 @@ make %{?_smp_mflags}
 mkdir -p \
     %{buildroot}%{_sbindir} \
     %{buildroot}%{_mandir}/man8 \
-    %{buildroot}%{_udevlibdir} \
-    %{buildroot}%{_udevrulesdir} \
+    %{buildroot}/lib/udev \
+    %{buildroot}/lib/udev/rules.d \
     %{buildroot}%{dracutlibdir}/modules.d
 
 %make_install \
     INSTALL="install -p" \
-    UDEVLIBDIR=%{_udevlibdir} \
+    UDEVLIBDIR=/lib/udev \
     DRACUTLIBDIR=%{dracutlibdir} \
     MANDIR=%{_mandir}
 
@@ -57,18 +52,17 @@ rm %{buildroot}%{_datarootdir}/initramfs-tools/hooks/bcache
 
 %files
 %doc README COPYING
-%{_udevrulesdir}/*
+/lib/udev/rules.d/*
 %{_mandir}/man8/*
-%{_udevlibdir}/bcache-register
-%{_udevlibdir}/bcache-params
-%{_udevlibdir}/probe-bcache
+/lib/udev/bcache-register
+/lib/udev/probe-bcache
 %{_sbindir}/bcache-super-show
 %{_sbindir}/make-bcache
 %{dracutlibdir}/modules.d/90bcache
 
 %changelog
-* Tue Jan 08 2019 Amzn1 Linux <smcdowell@cloudbd.io> - 1.0.8-11
-- Built for amzn1 linux
+* Tue Jan 08 2019 Amzn2 Linux <smcdowell@cloudbd.io> - 1.0.8-11
+- Built for amzn2 linux
 
 * Wed Aug 02 2017 Fedora Release Engineering <releng@fedoraproject.org> - 1.0.8-10
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_27_Binutils_Mass_Rebuild
