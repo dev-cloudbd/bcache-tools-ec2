@@ -12,7 +12,6 @@ Source0: https://github.com/g2p/bcache-tools/archive/v1.0.8.tar.gz
 Patch0: bcache-tools-1.0.8-crc64.patch
 # udev doesn't always recognize kmod as a builtin, use modprobe instead
 Patch1: bcache-tools-1.0.8-modprobe.patch
-Conflicts: dracut < 034
 BuildRequires: libuuid-devel libblkid-devel
 
 %description
@@ -49,6 +48,7 @@ mkdir -p \
 # prevent complaints when checking for unpackaged files
 rm %{buildroot}%{_prefix}/lib/initcpio/install/bcache
 rm %{buildroot}%{_datarootdir}/initramfs-tools/hooks/bcache
+rm %{buildroot}%{dracutlibdir}/modules.d/90bcache/*
 
 %files
 %doc README COPYING
@@ -58,7 +58,6 @@ rm %{buildroot}%{_datarootdir}/initramfs-tools/hooks/bcache
 %{_udevlibdir}/probe-bcache
 %{_sbindir}/bcache-super-show
 %{_sbindir}/make-bcache
-%{dracutlibdir}/modules.d/90bcache
 
 %changelog
 * Tue Jan 08 2019 Amzn2 Linux <smcdowell@cloudbd.io> - 1.0.8-11
