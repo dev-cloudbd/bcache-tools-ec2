@@ -12,7 +12,6 @@ Source0: https://github.com/g2p/bcache-tools/archive/v1.0.8.tar.gz
 Patch0: bcache-tools-1.0.8-crc64.patch
 # udev doesn't always recognize kmod as a builtin, use modprobe instead
 Patch1: bcache-tools-1.0.8-modprobe.patch
-Conflicts: dracut < 034
 BuildRequires: libuuid-devel libblkid-devel
 
 %description
@@ -21,7 +20,7 @@ drives such as flash-based solid state drives (SSDs) to act as a cache for
 one or more slower hard disk drives.
 This package contains the utilities for manipulating bcache.
 
-%global _udevlibdir %{_prefix}/lib/udev
+%global _udevlibdir /lib/udev
 %global dracutlibdir %{_prefix}/lib/dracut
 
 %prep
@@ -36,29 +35,29 @@ make %{?_smp_mflags}
 mkdir -p \
     %{buildroot}%{_sbindir} \
     %{buildroot}%{_mandir}/man8 \
-    %{buildroot}/lib/udev \
-    %{buildroot}/lib/udev/rules.d \
+    %{buildroot}%{_udevlibdir} \
+    %{buildroot}%{_udevlibdir}/rules.d \
     %{buildroot}%{dracutlibdir}/modules.d
 
 %make_install \
     INSTALL="install -p" \
-    UDEVLIBDIR=/lib/udev \
+    UDEVLIBDIR=%{_udevlibdir} \
     DRACUTLIBDIR=%{dracutlibdir} \
     MANDIR=%{_mandir}
 
 # prevent complaints when checking for unpackaged files
 rm %{buildroot}%{_prefix}/lib/initcpio/install/bcache
 rm %{buildroot}%{_datarootdir}/initramfs-tools/hooks/bcache
+rm %{buildroot}%{dracutlibdir}/modules.d/90bcache/*
 
 %files
 %doc README COPYING
-/lib/udev/rules.d/*
+%{_udevlibdir}/rules.d/*
 %{_mandir}/man8/*
-/lib/udev/bcache-register
-/lib/udev/probe-bcache
+%{_udevlibdir}/bcache-register
+%{_udevlibdir}/probe-bcache
 %{_sbindir}/bcache-super-show
 %{_sbindir}/make-bcache
-%{dracutlibdir}/modules.d/90bcache
 
 %changelog
 * Tue Jan 08 2019 Amzn1 Linux <smcdowell@cloudbd.io> - 1.0.8-11

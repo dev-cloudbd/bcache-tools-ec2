@@ -21,7 +21,7 @@ drives such as flash-based solid state drives (SSDs) to act as a cache for
 one or more slower hard disk drives.
 This package contains the utilities for manipulating bcache.
 
-%global _udevlibdir %{_prefix}/lib/udev
+%global _udevlibdir /lib/udev
 %global dracutlibdir %{_prefix}/lib/dracut
 
 %prep
@@ -36,13 +36,13 @@ make %{?_smp_mflags}
 mkdir -p \
     %{buildroot}%{_sbindir} \
     %{buildroot}%{_mandir}/man8 \
-    %{buildroot}/lib/udev \
-    %{buildroot}/lib/udev/rules.d \
+    %{buildroot}%{_udevlibdir} \
+    %{buildroot}%{_udevlibdir}/rules.d \
     %{buildroot}%{dracutlibdir}/modules.d
 
 %make_install \
     INSTALL="install -p" \
-    UDEVLIBDIR=/lib/udev \
+    UDEVLIBDIR=%{_udevlibdir} \
     DRACUTLIBDIR=%{dracutlibdir} \
     MANDIR=%{_mandir}
 
@@ -52,10 +52,10 @@ rm %{buildroot}%{_datarootdir}/initramfs-tools/hooks/bcache
 
 %files
 %doc README COPYING
-/lib/udev/rules.d/*
+%{_udevlibdir}/rules.d/*
 %{_mandir}/man8/*
-/lib/udev/bcache-register
-/lib/udev/probe-bcache
+%{_udevlibdir}/bcache-register
+%{_udevlibdir}/probe-bcache
 %{_sbindir}/bcache-super-show
 %{_sbindir}/make-bcache
 %{dracutlibdir}/modules.d/90bcache
