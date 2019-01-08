@@ -1,9 +1,7 @@
-#global gitdate 20131018
-
 Summary: Tools for Linux kernel block layer cache
 Name: bcache-tools
 Version: 1.0.8
-Release: 10%{?dist}
+Release: 11%{?dist}
 License: GPLv2
 Group: System Environment/Base
 URL: http://bcache.evilpiepirate.org/
@@ -18,7 +16,7 @@ Patch0: bcache-tools-1.0.8-crc64.patch
 # udev doesn't always recognize kmod as a builtin, use modprobe instead
 Patch1: bcache-tools-1.0.8-modprobe.patch
 Conflicts: dracut < 034
-BuildRequires: libuuid-devel libblkid-devel systemd
+BuildRequires: libuuid-devel libblkid-devel
 
 %description
 Bcache is a Linux kernel block layer cache. It allows one or more fast disk
@@ -41,13 +39,13 @@ make %{?_smp_mflags}
 mkdir -p \
     %{buildroot}%{_sbindir} \
     %{buildroot}%{_mandir}/man8 \
-    %{buildroot}%{_udevlibdir} \
-    %{buildroot}%{_udevrulesdir} \
+    %{buildroot}/lib/udev \
+    %{buildroot}/lib/udev/rules.d \
     %{buildroot}%{dracutlibdir}/modules.d
 
 %make_install \
     INSTALL="install -p" \
-    UDEVLIBDIR=%{_udevlibdir} \
+    UDEVLIBDIR=/lib/udev \
     DRACUTLIBDIR=%{dracutlibdir} \
     MANDIR=%{_mandir}
 
@@ -57,11 +55,10 @@ rm %{buildroot}%{_datarootdir}/initramfs-tools/hooks/bcache
 
 %files
 %doc README COPYING
-%{_udevrulesdir}/*
+/lib/udev/rules.d/*
 %{_mandir}/man8/*
-%{_udevlibdir}/bcache-register
-%{_udevlibdir}/bcache-params
-%{_udevlibdir}/probe-bcache
+/lib/udev/bcache-register
+/lib/udev/probe-bcache
 %{_sbindir}/bcache-super-show
 %{_sbindir}/make-bcache
 %{dracutlibdir}/modules.d/90bcache
